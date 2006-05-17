@@ -27,10 +27,10 @@ spec = Gem::Specification.new do |s|
   s.test_files = ['test/test_uuid.rb']
 
   s.has_rdoc = true
-  s..extra_rdoc_files = ['README']
-  rdoc_options << '--title' << 'UUID4R' <<
-                  '--main' << 'README' <<
-                  '--line-numbers'
+  s.extra_rdoc_files = ['README']
+  s.rdoc_options << '--title' << 'UUID4R' <<
+                    '--main' << 'README' <<
+                    '--line-numbers'
 end    
 
 Rake::GemPackageTask.new(spec) do |pkg|
