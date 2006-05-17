@@ -1,0 +1,35 @@
+UUID4R
+======
+
+  This library generates and parses Universally Unique Identifier (UUID),
+  based on OSSP uuid C library. So, libossp-uuid library is pre-required.
+  OSSP uuid (http://www.ossp.org/pkg/lib/uuid/) is a ISO-C:1999 application
+  programming interface (API) for the generation of DCE 1.1, ISO/IEC
+  11578:1996 and RFC 4122 compliant UUID. It supports DCE 1.1 variant UUIDs
+  of version 1 (time and node based), version 3 (name based, MD5), version 4
+  (random number based) and version 5 (name based, SHA-1).
+ 
+
+INSTALL
+=======
+
+  $ cd ext
+  $ ruby extconf.rb
+  $ make
+  $ sudo make install
+
+
+SAMPLE
+======
+
+  require 'uuid4r'
+  puts UUID4R::uuid(1)
+  puts UUID4R::uuid_v1
+  puts UUID4R::uuid(1, :str)
+  puts UUID4R::uuid(1, :bin)
+  puts UUID4R::uuid(1, :txt)
+  puts UUID4R::uuid_v1(:str)
+  puts UUID4R::uuid_v1(:bin)
+  puts UUID4R::uuid_v1(:txt)
+  puts UUID4R::uuid_v3("ns:URL", "www.sgtpepper.net")
+
