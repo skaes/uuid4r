@@ -26,7 +26,11 @@
 #include "ruby.h"
 #include "ossp/uuid.h"
 
-VALUE rb_cUUID;
+VALUE rb_cUUID4R;
+VALUE rb_cUUID4Rv1;
+VALUE rb_cUUID4Rv3;
+VALUE rb_cUUID4Rv4;
+VALUE rb_cUUID4Rv5;
 /* symbols */
 ID    id_fmt_bin, id_fmt_str, id_fmt_txt;
 
@@ -44,35 +48,226 @@ rb2uuid_fmt(symbol)
         result = UUID_FMT_STR;
     else if (fmt == id_fmt_txt)
         result = UUID_FMT_TXT;
+    else
+        rb_raise(rb_eArgError, "wrong argumens");
 
     return result;
 }
 
 static VALUE
-export(const uuid_t *uuid, uuid_fmt_t fmt, void **data_ptr, size_t *data_len)
+export(uuid, fmt)
+    const uuid_t *uuid;
+    uuid_fmt_t fmt;
 {
     uuid_rc_t rc;
+    char *str;
+    char *ptr; //uuid_uint8_t
     VALUE result;
+
+    str = NULL;
+    ptr = NULL;
     
     /* dispatch into format-specific functions */
     switch (fmt) {
         case UUID_FMT_BIN:
-            rc = uuid_export(uuid, fmt, data_ptr, data_len);
-            result = rb_str_new(*data_ptr, UUID_LEN_BIN);
+            rc = uuid_export(uuid, fmt, (void **)&ptr, NULL);
+            result = rb_str_new(ptr, UUID_LEN_BIN);
+            free(ptr);
             break;
         case UUID_FMT_STR: 
-            rc = uuid_export(uuid, fmt, data_ptr, data_len);
-            result = rb_str_new2(*data_ptr);
+            rc = uuid_export(uuid, fmt, (void **)&str, NULL);
+            result = rb_str_new2(str);
+            free(str);
             break;
         case UUID_FMT_TXT:
-            rc = uuid_export(uuid, fmt, data_ptr, data_len);
-            result = rb_str_new2(*data_ptr);
+            rc = uuid_export(uuid, fmt, (void **)&str, NULL);
+            result = rb_str_new2(str);
+            free(str);
             break;
         default:
             rc = UUID_RC_ARG;
     }
- 
+    
     return result;
+}
+
+
+
+
+static void
+uuid4r_free(uuid)
+    uuid_t *uuid;
+{
+    uuid_destroy(uuid);
+}
+    
+static VALUE
+uuid4r_alloc(klass)
+    VALUE klass;
+{
+    VALUE obj;
+    uuid_t *uuid;
+
+    uuid_create(&uuid);
+    obj = Data_Wrap_Struct(klass, 0, uuid4r_free, uuid);
+
+    return obj;
+}
+
+/* UUID4Rv1 */
+
+static VALUE
+uuid4rv1_initialize(self)
+    VALUE self;
+{
+    uuid_t *uuid;
+    
+    Data_Get_Struct(self, uuid_t, uuid);
+    uuid_make(uuid, UUID_MAKE_V1);    
+    
+    return self;
+}
+
+static VALUE
+uuid4rv1_export(argc, argv, self)
+    int argc;
+    VALUE *argv;
+    VALUE self;
+{
+    VALUE format;
+    uuid_fmt_t fmt;
+    uuid_t *uuid;
+    
+    if ( rb_scan_args(argc, argv, "01", &format) == 1)
+        fmt = rb2uuid_fmt(format);
+    else
+        fmt = UUID_FMT_STR;
+
+    Data_Get_Struct(self, uuid_t, uuid);
+    
+    return export(uuid, fmt);
+}
+
+/* UUID4Rv3 */
+
+static VALUE
+uuid4rv3_initialize(self, namespace, namespace_str)
+    VALUE self;
+    VALUE namespace;
+    VALUE namespace_str;
+{
+    uuid_t *uuid;
+    uuid_t *uuid_ns;
+    char *uuid_ns_str;
+    
+    uuid_ns     = NULL;
+    uuid_ns_str = NULL;
+    uuid_create(&uuid_ns);
+    uuid_load(uuid_ns, StringValueCStr(namespace)); 
+    uuid_ns_str = StringValueCStr(namespace_str);
+    
+    Data_Get_Struct(self, uuid_t, uuid);
+    uuid_make(uuid, UUID_MAKE_V5, uuid_ns, uuid_ns_str);    
+    
+    return self;
+}
+
+static VALUE
+uuid4rv3_export(argc, argv, self)
+    int argc;
+    VALUE *argv;
+    VALUE self;
+{
+    VALUE format;
+    uuid_fmt_t fmt;
+    uuid_t *uuid;
+    
+    if ( rb_scan_args(argc, argv, "01", &format) == 1)
+        fmt = rb2uuid_fmt(format);
+    else
+        fmt = UUID_FMT_STR;
+
+    Data_Get_Struct(self, uuid_t, uuid);
+    
+    return export(uuid, fmt);
+}
+
+/* UUID4Rv4 */
+
+static VALUE
+uuid4rv4_initialize(self)
+    VALUE self;
+{
+    uuid_t *uuid;
+    
+    Data_Get_Struct(self, uuid_t, uuid);
+    uuid_make(uuid, UUID_MAKE_V4);    
+    
+    return self;
+}
+
+static VALUE
+uuid4rv4_export(argc, argv, self)
+    int argc;
+    VALUE *argv;
+    VALUE self;
+{
+    VALUE format;
+    uuid_fmt_t fmt;
+    uuid_t *uuid;
+    
+    if ( rb_scan_args(argc, argv, "01", &format) == 1)
+        fmt = rb2uuid_fmt(format);
+    else
+        fmt = UUID_FMT_STR;
+
+    Data_Get_Struct(self, uuid_t, uuid);
+    
+    return export(uuid, fmt);
+}
+
+/* UUID4Rv5 */
+
+static VALUE
+uuid4rv5_initialize(self, namespace, namespace_str)
+    VALUE self;
+    VALUE namespace;
+    VALUE namespace_str;
+{
+    uuid_t *uuid;
+    uuid_t *uuid_ns;
+    char *uuid_ns_str;
+    
+    uuid_ns     = NULL;
+    uuid_ns_str = NULL;
+    uuid_create(&uuid_ns);
+    uuid_load(uuid_ns, StringValueCStr(namespace)); 
+    uuid_ns_str = StringValueCStr(namespace_str);
+    
+    Data_Get_Struct(self, uuid_t, uuid);
+    uuid_make(uuid, UUID_MAKE_V5, uuid_ns, uuid_ns_str);    
+    
+    return self;
+}
+
+static VALUE
+uuid4rv5_export(argc, argv, self)
+    int argc;
+    VALUE *argv;
+    VALUE self;
+{
+    VALUE format;
+    uuid_fmt_t fmt;
+    uuid_t *uuid;
+    
+    if ( rb_scan_args(argc, argv, "01", &format) == 1)
+        fmt = rb2uuid_fmt(format);
+    else
+        fmt = UUID_FMT_STR;
+
+    Data_Get_Struct(self, uuid_t, uuid);
+    
+    return export(uuid, fmt);
 }
 
 /* ------------ */
@@ -102,12 +297,10 @@ uuid4r_uuid(argc, argv, self)
     uuid_fmt_t fmt;
     unsigned int mode;
     uuid_t *uuid;
-    char *str;
     VALUE result;
 
     uuid_ns     = NULL;
     uuid_ns_str = NULL;
-    str         = NULL;
     
     switch (argc) {
         case 1:
@@ -149,9 +342,10 @@ uuid4r_uuid(argc, argv, self)
     }
     uuid_create(&uuid);
     uuid_make(uuid, mode, uuid_ns, uuid_ns_str);
-    result = export(uuid, fmt, (void **)&str, NULL);
+    result = export(uuid, fmt);
+    if (uuid_ns)
+      uuid_destroy(uuid_ns);
     uuid_destroy(uuid);
-    free(str); // str should be freed.
 
     return result;
 }
@@ -246,19 +440,48 @@ uuid4r_uuid_v5(argc, argv, self)
             INT2NUM(5), namespace, namespace_str);        
 }
 
+VALUE
+uuid4r_copmare(self, lhs, rhs)
+    VALUE self, lhs, rhs;
+{
+  
+    return self; // dummy
+}
+
 void Init_uuid4r (void) {
     /* regist symbols */
     id_fmt_bin = rb_intern("bin");
     id_fmt_str = rb_intern("str");
     id_fmt_txt = rb_intern("txt");
 
-    rb_cUUID      = rb_define_class("UUID4R", rb_cObject);
-
+    /* ------ UUID4R ------ */
+    rb_cUUID4R      = rb_define_class("UUID4R", rb_cObject);
     /* utilities */
-    rb_define_module_function(rb_cUUID, "uuid", uuid4r_uuid, -1);
-    rb_define_module_function(rb_cUUID, "uuid_v1", uuid4r_uuid_v1, -1);
-    rb_define_module_function(rb_cUUID, "uuid_v3", uuid4r_uuid_v3, -1);
-    rb_define_module_function(rb_cUUID, "uuid_v4", uuid4r_uuid_v4, -1);
-    rb_define_module_function(rb_cUUID, "uuid_v5", uuid4r_uuid_v5, -1);
+    rb_define_module_function(rb_cUUID4R, "uuid", uuid4r_uuid, -1);
+    rb_define_module_function(rb_cUUID4R, "uuid_v1", uuid4r_uuid_v1, -1);
+    rb_define_module_function(rb_cUUID4R, "uuid_v3", uuid4r_uuid_v3, -1);
+    rb_define_module_function(rb_cUUID4R, "uuid_v4", uuid4r_uuid_v4, -1);
+    rb_define_module_function(rb_cUUID4R, "uuid_v5", uuid4r_uuid_v5, -1);
+    
+    /* ------ UUID4Rv1 ------ */
+    rb_cUUID4Rv1 = rb_define_class_under(rb_cUUID4R, "UUID4Rv1", rb_cObject);
+    rb_define_alloc_func(rb_cUUID4Rv1, uuid4r_alloc);
+    rb_define_method(rb_cUUID4Rv1, "initialize", uuid4rv1_initialize, 0);
+    rb_define_method(rb_cUUID4Rv1, "export", uuid4rv1_export, -1);
+    /* ------ UUID4Rv3 ------ */
+    rb_cUUID4Rv3 = rb_define_class_under(rb_cUUID4R, "UUID4Rv3", rb_cObject);
+    rb_define_alloc_func(rb_cUUID4Rv3, uuid4r_alloc);
+    rb_define_method(rb_cUUID4Rv3, "initialize", uuid4rv3_initialize, 2);
+    rb_define_method(rb_cUUID4Rv3, "export", uuid4rv3_export, -1);
+    /* ------ UUID4Rv4 ------ */
+    rb_cUUID4Rv4 = rb_define_class_under(rb_cUUID4R, "UUID4Rv4", rb_cObject);
+    rb_define_alloc_func(rb_cUUID4Rv4, uuid4r_alloc);
+    rb_define_method(rb_cUUID4Rv4, "initialize", uuid4rv4_initialize, 0);
+    rb_define_method(rb_cUUID4Rv4, "export", uuid4rv4_export, -1);
+    /* ------ UUID4Rv5 ------ */
+    rb_cUUID4Rv5 = rb_define_class_under(rb_cUUID4R, "UUID4Rv5", rb_cObject);
+    rb_define_alloc_func(rb_cUUID4Rv5, uuid4r_alloc);
+    rb_define_method(rb_cUUID4Rv5, "initialize", uuid4rv5_initialize, 2);
+    rb_define_method(rb_cUUID4Rv5, "export", uuid4rv5_export, -1);
 }
 
