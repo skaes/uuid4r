@@ -54,3 +54,52 @@ class UUIDTest < Test::Unit::TestCase
     assert_equal(a, d)
   end
 end
+
+
+class UUID4Rv1Test < Test::Unit::TestCase
+  def setup
+    @uuid = UUID4R::UUID4Rv1.new
+  end
+
+  def test_export_str
+    assert_kind_of(String, @uuid.export(:str))
+    assert_equal(@uuid.export, @uuid.export(:str))
+  end
+end
+
+
+class UUID4Rv4Test < Test::Unit::TestCase
+  def setup
+    @uuid = UUID4R::UUID4Rv4.new
+  end
+
+  def test_export_str
+    assert_kind_of(String, @uuid.export(:str))
+    assert_equal(@uuid.export, @uuid.export(:str))
+  end
+end
+
+
+class UUID4Rv3Test < Test::Unit::TestCase
+  def setup
+    @uuid = UUID4R::UUID4Rv3.new("ns:URL", "www.sgtpepper.net")
+  end
+
+  def test_export_str
+    assert_kind_of(String, @uuid.export(:str))
+    assert_equal(@uuid.export, @uuid.export(:str))
+  end
+end
+
+
+class UUID4Rv5Test < Test::Unit::TestCase
+  def setup
+    @uuid = UUID4R::UUID4Rv5.new("ns:URL", "www.sgtpepper.net")
+  end
+
+  def test_export_str
+    assert_kind_of(String, @uuid.export(:str))
+    assert_equal(@uuid.export, @uuid.export(:str))
+  end
+end
+

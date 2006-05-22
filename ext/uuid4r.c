@@ -49,7 +49,7 @@ rb2uuid_fmt(symbol)
     else if (fmt == id_fmt_txt)
         result = UUID_FMT_TXT;
     else
-        rb_raise(rb_eArgError, "wrong argumens");
+        rb_raise(rb_eArgError, "wrong argument");
 
     return result;
 }
@@ -85,7 +85,7 @@ export(uuid, fmt)
             free(str);
             break;
         default:
-            rc = UUID_RC_ARG;
+            rb_raise(rb_eArgError, "wrong argument");
     }
     
     return result;
@@ -320,7 +320,7 @@ uuid4r_uuid(argc, argv, self)
            fmt = rb2uuid_fmt(format);           
            break;
         default:
-           rb_raise(rb_eArgError, "wrong argumens");
+           rb_raise(rb_eArgError, "wrong argument");
            break;
     }
     
