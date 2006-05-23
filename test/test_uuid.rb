@@ -65,6 +65,16 @@ class UUID4Rv1Test < Test::Unit::TestCase
     assert_kind_of(String, @uuid.export(:str))
     assert_equal(@uuid.export, @uuid.export(:str))
   end
+
+  def test_compare
+    uuid2 = UUID4R::UUID4Rv1.new
+    assert(@uuid.compare(uuid2) < 0)
+    assert(@uuid.compare(@uuid) == 0)
+    assert(uuid2.compare(@uuid) > 0)
+    assert_equal(-1, @uuid <=> uuid2)
+    assert_equal( 0, @uuid <=> @uuid)
+    assert_equal( 1, uuid2 <=> @uuid)
+  end
 end
 
 

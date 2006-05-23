@@ -114,6 +114,23 @@ uuid4r_alloc(klass)
     return obj;
 }
 
+/* UUID4R common */
+
+static VALUE
+uuid4r_compare(lhs, rhs)
+    VALUE lhs, rhs;
+{
+    const uuid_t *uuid_lhs;
+    const uuid_t *uuid_rhs;
+    int value;
+    
+    Data_Get_Struct(lhs, uuid_t, uuid_lhs);
+    Data_Get_Struct(rhs, uuid_t, uuid_rhs);
+    uuid_compare(uuid_lhs, uuid_rhs, &value);
+
+    return INT2NUM(value);
+}
+
 /* UUID4Rv1 */
 
 static VALUE
@@ -468,20 +485,28 @@ void Init_uuid4r (void) {
     rb_define_alloc_func(rb_cUUID4Rv1, uuid4r_alloc);
     rb_define_method(rb_cUUID4Rv1, "initialize", uuid4rv1_initialize, 0);
     rb_define_method(rb_cUUID4Rv1, "export", uuid4rv1_export, -1);
+    rb_define_method(rb_cUUID4Rv1, "compare", uuid4r_compare, 1);
+    rb_define_alias(rb_cUUID4Rv1, "<=>", "compare");
     /* ------ UUID4Rv3 ------ */
     rb_cUUID4Rv3 = rb_define_class_under(rb_cUUID4R, "UUID4Rv3", rb_cObject);
     rb_define_alloc_func(rb_cUUID4Rv3, uuid4r_alloc);
     rb_define_method(rb_cUUID4Rv3, "initialize", uuid4rv3_initialize, 2);
     rb_define_method(rb_cUUID4Rv3, "export", uuid4rv3_export, -1);
+    rb_define_method(rb_cUUID4Rv3, "compare", uuid4r_compare, 1);
+    rb_define_alias(rb_cUUID4Rv3, "<=>", "compare");
     /* ------ UUID4Rv4 ------ */
     rb_cUUID4Rv4 = rb_define_class_under(rb_cUUID4R, "UUID4Rv4", rb_cObject);
     rb_define_alloc_func(rb_cUUID4Rv4, uuid4r_alloc);
     rb_define_method(rb_cUUID4Rv4, "initialize", uuid4rv4_initialize, 0);
     rb_define_method(rb_cUUID4Rv4, "export", uuid4rv4_export, -1);
+    rb_define_method(rb_cUUID4Rv4, "compare", uuid4r_compare, 1);
+    rb_define_alias(rb_cUUID4Rv4, "<=>", "compare");
     /* ------ UUID4Rv5 ------ */
     rb_cUUID4Rv5 = rb_define_class_under(rb_cUUID4R, "UUID4Rv5", rb_cObject);
     rb_define_alloc_func(rb_cUUID4Rv5, uuid4r_alloc);
     rb_define_method(rb_cUUID4Rv5, "initialize", uuid4rv5_initialize, 2);
     rb_define_method(rb_cUUID4Rv5, "export", uuid4rv5_export, -1);
+    rb_define_method(rb_cUUID4Rv5, "compare", uuid4r_compare, 1);
+    rb_define_alias(rb_cUUID4Rv5, "<=>", "compare");
 }
 
