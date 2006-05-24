@@ -8,7 +8,13 @@ UUID4R
   11578:1996 and RFC 4122 compliant UUID. It supports DCE 1.1 variant UUIDs
   of version 1 (time and node based), version 3 (name based, MD5), version 4
   (random number based) and version 5 (name based, SHA-1).
- 
+
+
+PRE-REQUIRES
+============
+
+  OSSP uuid library is required to build and run UUID4R.
+
 
 INSTALL
 =======
