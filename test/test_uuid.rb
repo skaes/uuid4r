@@ -53,6 +53,11 @@ class UUIDTest < Test::Unit::TestCase
     assert_equal(a, c)
     assert_equal(a, d)
   end
+
+  def test_import
+    uuid = UUID4R::import(:str, "266eb9ae-ea6e-11da-8113-0030134d803d")
+    assert_kind_of(UUID4R::UUID4RCommon, uuid)
+  end
 end
 
 
