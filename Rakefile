@@ -1,10 +1,9 @@
 require 'rubygems'
-Gem::manage_gems
 require 'rake/gempackagetask'
 
 spec = Gem::Specification.new do |s|  
   s.name    = "uuid4r"
-  s.version = "0.1"
+  s.version = "0.1.1"
   s.author  = "Daigo Moriwaki"
   s.email   = "daigo@debian.org"
   s.rubyforge_project = "uuid4r"
