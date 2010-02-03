@@ -162,7 +162,7 @@ uuid4r_import(self, format, str)
     uuid_create(&uuid);
     fmt = rb2uuid_fmt(format);
     StringValue(str);
-    uuid_import(uuid, fmt, RSTRING(str)->ptr, RSTRING(str)->len);
+    uuid_import(uuid, fmt, RSTRING_PTR(str), RSTRING_LEN(str));
     
     return Data_Wrap_Struct(rb_cUUID4RCommon, 0, uuid4r_free, uuid);
 }
