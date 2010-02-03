@@ -1,5 +1,5 @@
 require 'test/unit'
-require './uuid4r.so'
+require 'uuid4r.so'
 
 class UUIDTest < Test::Unit::TestCase
   def test_uuid_v1_default
@@ -25,9 +25,9 @@ class UUIDTest < Test::Unit::TestCase
 
   def test_uuid_v1_txt
     assert_kind_of(String, UUID4R::uuid_v1(:txt))
-    assert(/^variant:/ =~ UUID4R::uuid_v1(:txt))
-    assert(/^version:/ =~ UUID4R::uuid_v1(:txt))
-    assert(/^content:/ =~ UUID4R::uuid_v1(:txt))
+    assert(/variant: DCE 1.1/ =~ UUID4R::uuid_v1(:txt))
+    assert(/version: 1/ =~ UUID4R::uuid_v1(:txt))
+    assert(/content:/ =~ UUID4R::uuid_v1(:txt))
   end
   
   def test_uuid_v3_str
@@ -73,9 +73,9 @@ class UUID4Rv1Test < Test::Unit::TestCase
 
   def test_compare
     uuid2 = UUID4R::UUID4Rv1.new
-    assert(@uuid.compare(uuid2) < 0)
-    assert(@uuid.compare(@uuid) == 0)
-    assert(uuid2.compare(@uuid) > 0)
+    assert(@uuid.compare(uuid2) == -1)
+    assert(@uuid.compare(@uuid) ==  0)
+    assert(uuid2.compare(@uuid) ==  1)
     assert_equal(-1, @uuid <=> uuid2)
     assert_equal( 0, @uuid <=> @uuid)
     assert_equal( 1, uuid2 <=> @uuid)
