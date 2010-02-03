@@ -24,7 +24,7 @@
  */
  
 #include "ruby.h"
-#include "ossp/uuid.h"
+#include "uuid.h"
 
 VALUE rb_cUUID4R;
 VALUE rb_cUUID4RCommon;
@@ -268,7 +268,7 @@ uuid4r_uuid(argc, argv, self)
     uuid_t *uuid_ns;
     char *uuid_ns_str;
     uuid_fmt_t fmt;
-    unsigned int mode;
+    unsigned int mode = 0; /* suppress compiler warning */
     uuid_t *uuid;
     VALUE result;
 
@@ -277,7 +277,7 @@ uuid4r_uuid(argc, argv, self)
     
     switch (argc) {
         case 1:
-           rb_scan_args(argc, argv, "11", &version); 
+           rb_scan_args(argc, argv, "11", &version, &format);
            fmt = UUID_FMT_STR;
            break;
         case 2:
@@ -285,7 +285,7 @@ uuid4r_uuid(argc, argv, self)
            fmt = rb2uuid_fmt(format);           
            break;
         case 3:
-           rb_scan_args(argc, argv, "31", &version, &namespace, &namespace_str); 
+           rb_scan_args(argc, argv, "31", &version, &namespace, &namespace_str, &format);
            fmt = UUID_FMT_STR;
            break;
         case 4:
