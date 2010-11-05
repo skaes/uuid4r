@@ -5,7 +5,7 @@ if File.exist?(`which uuid-config`.chomp)
   $LDFLAGS << " " << `uuid-config --ldflags`.chomp
 end
 
-if !have_library('uuid')
+if !have_library('ossp-uuid')
   puts "OSSP uuid library required -- not found."
   exit 1
 end
