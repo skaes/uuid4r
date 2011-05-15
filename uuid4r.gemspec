@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   EOF
   s.homepage = "http://uuid4r.rubyforge.org"
 
-  s.files = FileList['ext/extconf.rb', 'ext/*.c', 'test/**/*'].to_a
+  s.files = Dir['ext/extconf.rb', 'ext/*.c', 'test/**/*']
   s.require_path = '.'
   s.extensions << "ext/extconf.rb"
   s.test_files = ['test/test_uuid.rb']
