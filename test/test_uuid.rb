@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'uuid4r.so'
+require File.expand_path('../../ext/uuid4r.so', __FILE__)
 
 class UUIDTest < Test::Unit::TestCase
   def test_uuid_v1_default
