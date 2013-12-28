@@ -23,8 +23,8 @@
  *
  */
 
-#include "ruby.h"
 #include "uuid.h"
+#include "ruby.h"
 
 VALUE rb_cUUID4R;
 VALUE rb_cUUID4RCommon;
